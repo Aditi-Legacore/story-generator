@@ -4,8 +4,9 @@ export default function StoryGen() {
     const [customName, setCustomName] = useState("");
     const [unit, setUnit] = useState("us"); // "us" or "uk"
     const [stories, setStories] = useState([]);
+    const [currentStory, setCurrentStory] = useState("");
 
-     useEffect(() => {
+    useEffect(() => {
         fetch("/stories.json")
             .then((res) => res.json())
             .then((data) => {
@@ -14,6 +15,18 @@ export default function StoryGen() {
             })
             .catch((err) => console.error("Error loading stories:", err));
     }, []);
+
+    const generateStory = () => {
+        if (stories.length === 0) return;
+
+        let story = stories[Math.floor(Math.random() * stories.length)];
+
+        if (customName.trim()) {
+            story = story.replace(/Bob/g, customName);
+        }
+
+        setCurrentStory(story);
+    };
 
     return (
         <div style={{ padding: "20px", maxWidth: "600px", margin: "auto" }}>
@@ -50,6 +63,7 @@ export default function StoryGen() {
 
             <div>
                 <button
+                    onClick={generateStory}
                     style={{
                         marginTop: "10px",
                         padding: "8px 14px",
@@ -60,8 +74,22 @@ export default function StoryGen() {
                         cursor: "pointer"
                     }}
                 >
-                    Log for Test
+                    Generate Random Story
                 </button>
+
+                {currentStory && (
+                <p
+                    style={{
+                        marginTop: "20px",
+                        padding: "12px",
+                        border: "1px solid #ddd",
+                        borderRadius: "6px",
+                        background: "#f9f9f9"
+                    }}
+                >
+                    {currentStory}
+                </p>
+            )}
             </div>
         </div>
     );
