@@ -21,8 +21,24 @@ export default function StoryGen() {
 
         let story = stories[Math.floor(Math.random() * stories.length)];
 
+        // This is a regular expression (regex).
+        // /Bob/ matches the text "Bob".
+        // The g flag = global → replace all occurrences, not just the first.
         if (customName.trim()) {
             story = story.replace(/Bob/g, customName);
+        }
+
+        if (unit === "uk") {
+            story = story.replace(/(\d+)\s?°F/g, (_, f) => {
+                const c = Math.round(((parseInt(f) - 32) * 5) / 9);
+                return `${c}°C`;
+            });
+
+            story = story.replace(/(\d+)\s?pounds?/g, (_, lbs) => {
+                const stones = (parseInt(lbs) / 14).toFixed(1);
+                const kg = (parseInt(lbs) * 0.453592).toFixed(1);
+                return `${stones} stone (${kg} kg)`;
+            });
         }
 
         setCurrentStory(story);
@@ -30,8 +46,7 @@ export default function StoryGen() {
 
     return (
         <div style={{ padding: "20px", maxWidth: "600px", margin: "auto" }}>
-            <h2>Commit 1: Input + Radio Test</h2>
-
+            <h2>Silly Story Generator 🎉</h2>
             <input
                 type="text"
                 placeholder="Enter custom name"
@@ -78,18 +93,18 @@ export default function StoryGen() {
                 </button>
 
                 {currentStory && (
-                <p
-                    style={{
-                        marginTop: "20px",
-                        padding: "12px",
-                        border: "1px solid #ddd",
-                        borderRadius: "6px",
-                        background: "#f9f9f9"
-                    }}
-                >
-                    {currentStory}
-                </p>
-            )}
+                    <p
+                        style={{
+                            marginTop: "20px",
+                            padding: "12px",
+                            border: "1px solid #ddd",
+                            borderRadius: "6px",
+                            background: "#f9f9f9"
+                        }}
+                    >
+                        {currentStory}
+                    </p>
+                )}
             </div>
         </div>
     );
