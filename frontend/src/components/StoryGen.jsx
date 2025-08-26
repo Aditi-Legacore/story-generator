@@ -1,13 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 export default function StoryGen() {
     const [customName, setCustomName] = useState("");
     const [unit, setUnit] = useState("us"); // "us" or "uk"
+    const [stories, setStories] = useState([]);
 
-    const testLog = () => {
-        console.log("Custom Name:", customName);
-        console.log("Unit Selected:", unit);
-    };
+     useEffect(() => {
+        fetch("/stories.json")
+            .then((res) => res.json())
+            .then((data) => {
+                console.log("Fetched stories:", data);
+                setStories(data);
+            })
+            .catch((err) => console.error("Error loading stories:", err));
+    }, []);
 
     return (
         <div style={{ padding: "20px", maxWidth: "600px", margin: "auto" }}>
@@ -44,7 +50,6 @@ export default function StoryGen() {
 
             <div>
                 <button
-                    onClick={testLog}
                     style={{
                         marginTop: "10px",
                         padding: "8px 14px",
